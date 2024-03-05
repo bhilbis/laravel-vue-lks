@@ -4,6 +4,7 @@
 
     export default function useSocieties(){
         const url = ref('/society')
+        const authUrl = ref('/auth/login') 
         const societies = ref([])
         const society = ref ([])
         const errors = ref({})
@@ -54,6 +55,17 @@
             }
         }
 
+        const login = async (credentials) => {
+            try {
+                const response = await http.post(`${authUrl.value}`,credentials);
+                // router.push({ name: 'crud' });
+                console.log(response.data);
+            } catch (error) {
+                console.error('Login error', error);
+                throw error;
+            }
+        }
+
         // const updateSocieties = async (id) => {
         //     errors.value = {};
         //     try {
@@ -72,9 +84,6 @@
         //     }
         //   }
           
-
-
-
         const destroySocieties = async (id) => {
         await http.delete(`${url.value}/${id}`)
     }
@@ -88,5 +97,6 @@
             storeSocieties,
             updateSocieties,
             destroySocieties,
+            login,
         }
     }

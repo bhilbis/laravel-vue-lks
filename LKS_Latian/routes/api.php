@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\api\SocietyController;
+use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\RegionalController;
+use App\Http\Controllers\api\SocietyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     Route::apiResource('society', SocietyController::class);
     Route::get('regional/list', [RegionalController::class, 'list']);
+    Route::prefix('auth')->group(function(){
+        Route::post('login', [AuthController::class, 'login']);
+    });
 });

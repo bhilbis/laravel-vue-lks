@@ -27,22 +27,22 @@
                       <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px">
                         Sign into your account
                       </h5>
-                      <div class="form-outline mb-4">
+                      <!-- <div class="form-outline mb-4">
                         <label class="form-label" for="id_card_number">Id Card Number</label>
                         <input
                           type="text"
                           id="id_card_number"
                           class="form-control form-control-lg"
-                          v-model="form.id_card_number"
+                          v-model="id_card_number"
                         />
-                      </div>
+                      </div> -->
                       <div class="form-outline mb-4">
                         <label class="form-label" for="name">Username</label>
                         <input
                           type="text"
                           id="name"
                           class="form-control form-control-lg"
-                          v-model="form.name"
+                          v-model="name"
                         />
                       </div>
                       <div class="form-outline mb-4">
@@ -51,11 +51,11 @@
                           type="password"
                           id="password"
                           class="form-control form-control-lg"
-                          v-model="form.password"
+                          v-model="password"
                         />
                       </div>
                       <div class="pt-1 mb-4">
-                        <button class="btn btn-dark btn-lg btn-block" type="button" @click="submitLogin">Login</button>
+                        <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
                       </div>
 
                       <a class="small text-muted" href="#!">Forgot password?</a> <br />
@@ -77,37 +77,28 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex';
+import useSocieties from '../compossable/societies'
 
-const form = ref({
-  id_card_number: '',
-  name: '',
-  password: ''
-});
+const router = useRouter()
+const { login } = useSocieties()
 
-const router = useRouter();
-const store = useStore();
+// const id_card_number = ref('')
+const name = ref('')
+const password = ref('')
+const errorMessage = ref('')
 
 const submitLogin = async () => {
   try {
-    const response = await axios.post('/auth/login', {
-      id_card_number: form.value.id_card_number,
-      name: form.value.name,
-      password: form.value.password
-    });
+    await login ({ name: name.value, password: password.value})
 
-    
-    const userData = response.data.user;
-
-    
-    store.commit('setUserData', userData);
-
-    router.push('/crud');
+    router.push({ name: 'crud'})
   } catch (error) {
-    console.error('Login failed:', error);
-    // Handle login failure (show an error message, etc.)
+    console.error('Login error', error)
+
+    errorMessage.value = 'Login failed. Please check your credentials and try again.'
+  } finally {
+    router.push({ name: 'crud'})
   }
 }
 </script>
